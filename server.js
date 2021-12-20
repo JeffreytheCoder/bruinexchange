@@ -21,7 +21,7 @@ app.use(express.json());
 
 // Define Routes
 app.use('/api/user', require('./api/user'));
-// app.use('/api/pages', require('./api/pages'));
+app.use('/api/offer', require('./api/offer'));
 // app.use('/api/posts', require('./api/posts'));
 
 app.listen(PORT, () => {

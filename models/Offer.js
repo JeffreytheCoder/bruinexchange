@@ -22,6 +22,10 @@ const OfferSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   },
+  confirmSell: {
+    type: Boolean,
+    default: false,
+  },
   paid: {
     type: Boolean,
     default: false,
