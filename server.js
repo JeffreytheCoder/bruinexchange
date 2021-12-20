@@ -20,7 +20,7 @@ app.use(express.json());
 // );
 
 // Define Routes
-// app.use('/api/users', require('./api/users'));
+app.use('/api/user', require('./api/user'));
 // app.use('/api/pages', require('./api/pages'));
 // app.use('/api/posts', require('./api/posts'));
 
