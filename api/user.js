@@ -8,6 +8,7 @@ const normalize = require('normalize-url');
 const auth = require('../middleware/auth');
 
 const User = require('../models/User');
+const Offer = require('../models/Offer');
 
 // @route    POST api/user
 // @desc     Register user
@@ -207,6 +208,73 @@ router.get('/', auth, async (req, res) => {
     let user = await User.findById(req.user.id).select('-password');
 
     res.json({ user });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route    GET api/user/offers/:type
+// @desc     get the current users' offers of input type
+// @access   Private
+router.get('/offers/:type', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    console.log(user.offers);
+    let offers = [];
+
+    if (req.params.type == 'all') {
+      for (const cur of user.offers) {
+        const offer = await Offer.findById(cur._id);
+        offers.push(offer);
+      }
+      res.json({ offers });
+    } else if (req.params.type == 'buy') {
+      for (const cur of user.offers) {
+        const offer = await Offer.findById(cur._id);
+
+        if (offer.type == 'buy') {
+          offers.push(offer);
+        }
+      }
+      res.json({ offers });
+    } else if (req.params.type == 'sell') {
+      for (const cur of user.offers) {
+        const offer = await Offer.findById(cur._id);
+
+        if (offer.type == 'sell') {
+          offers.push(offer);
+        }
+      }
+      res.json({ offers });
+    } else if (req.params.type == 'complete') {
+      for (const cur of user.offers) {
+        const offer = await Offer.findById(cur._id);
+
+        if (offer.paid) {
+          offers.push(offer);
+        }
+      }
+      res.json({ offers });
+    } else if (req.params.type == 'pending') {
+      for (const cur of user.offers) {
+        const offer = await Offer.findById(cur._id);
+
+        if (!offer.paid) {
+          offers.push(offer);
+        }
+      }
+      res.json({ offers });
+    } else if (req.params.type == 'need_action') {
+      for (const cur of user.offers) {
+        const offer = await Offer.findById(cur._id);
+
+        if (offer.confirmSell && !offer.paid) {
+          offers.push(offer);
+        }
+      }
+      res.json({ offers });
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
