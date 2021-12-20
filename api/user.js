@@ -14,7 +14,13 @@ const User = require('../models/User');
 // @access   Public
 router.post(
   '/',
-  check('email', 'Please include a valid email').isEmail(),
+  // check('email', 'Please include a valid email').isEmail(),
+  check('email', 'Please enter your UCLA email').custom((value) => {
+    if (/@ucla.com/.test(value)) {
+      return true;
+    }
+    throw new Error('Not UCLA email');
+  }),
   check(
     'password',
     'Please enter a password with 6 or more characters'
@@ -73,7 +79,12 @@ router.post(
 router.put(
   '/:user_id',
   auth,
-  check('email', 'Please include a valid email').isEmail(),
+  check('email', 'Please enter your UCLA email').custom((value) => {
+    if (/@ucla.com/.test(value)) {
+      return true;
+    }
+    throw new Error('Not UCLA email');
+  }),
   check(
     'password',
     'Please enter a password with 6 or more characters'
@@ -118,7 +129,12 @@ router.put(
 // @access   Public
 router.post(
   '/login',
-  check('email', 'Please include a valid email').isEmail(),
+  check('email', 'Please enter your UCLA email').custom((value) => {
+    if (/@ucla.com/.test(value)) {
+      return true;
+    }
+    throw new Error('Not UCLA email');
+  }),
   check('password', 'Password is required').exists(),
   async (req, res) => {
     const errors = validationResult(req);
