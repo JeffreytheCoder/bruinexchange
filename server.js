@@ -3,7 +3,7 @@ const connectDB = require('./config/db');
 // const multer = require('multer');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Connect Database
 connectDB();
