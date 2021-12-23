@@ -15,9 +15,9 @@ const Offer = require('../models/Offer');
 // @access   Public
 router.post(
   '/',
-  // check('email', 'Please include a valid email').isEmail(),
+  check('email', 'Please include a valid email').isEmail(),
   check('email', 'Please enter your UCLA email').custom((value) => {
-    if (/@ucla.com/.test(value)) {
+    if (/ucla.edu/.test(value)) {
       return true;
     }
     throw new Error('Not UCLA email');
