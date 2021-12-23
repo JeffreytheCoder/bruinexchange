@@ -19,7 +19,7 @@ const Alert = ({ alerts }) => {
         }
         ${
           alert.alertType === 'success'
-            ? 'bg-green-100 border-green-400 text-green-700'
+            ? 'bg-blue-100 border-blue-400 text-blue-700'
             : ''
         }`}
       role="alert"

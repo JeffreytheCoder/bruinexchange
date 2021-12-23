@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import PrivateRoute from './components/global/PrivateRoute';
-// import Navbar from './components/global/Navbar';
+import Navbar from './components/global/Navbar';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
-// import Alert from './components/global/Alert';
+import Alert from './components/global/Alert';
 // import Page from './components/page/Page';
 // import PostPage from './components/post/PostPage';
 // import CreatePage from './components/page/CreatePage';
@@ -34,11 +34,11 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
-        {/* <Route exact path='/' component={Landing} /> */}
-        {/* <Alert /> */}
-        {/* <Navbar /> */}
+        <Alert />
+        <Navbar />
+        <Route exact path="/" component={Login} /> */
         <Switch>
-          /* <Route exact path="/register" component={Register} />
+          <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
           {/* <PrivateRoute exact path="/page/create" component={CreatePage} />
           <PrivateRoute path="/page/:page_id" component={Page} />
