@@ -7,15 +7,19 @@ const UserSchema = new Schema({
     required: true,
     unique: true,
   },
+  name: {
+    type: String,
+    required: true,
+  },
   password: {
     type: String,
     required: true,
   },
-  offers: [
+  tickets: [
     {
-      offer: {
+      ticket: {
         type: Schema.Types.ObjectId,
-        ref: 'offer',
+        ref: 'ticket',
       },
     },
   ],

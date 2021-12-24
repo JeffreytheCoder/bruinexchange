@@ -40,7 +40,7 @@ const Landing = () => {
             <input
               type="text"
               class="font-main text-gray-600 h-12 w-full pr-8 pl-5 rounded z-0 border-none outline-none text-xl"
-              placeholder="Search for the course you want to enroll..."
+              placeholder="Search for the course you want to take..."
             />
             <div class="absolute top-4 right-3">
               {/* <i class="fa fa-search text-gray-400 z-20 hover:text-gray-500"></i>{' '} */}
