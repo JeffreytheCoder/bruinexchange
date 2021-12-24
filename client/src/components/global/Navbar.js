@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -7,6 +7,7 @@ import logoWhite from '../../images/logo192.png';
 
 const Navbar = ({ auth }) => {
   const [hideMenu, setMenu] = useState(true);
+  const location = useLocation();
 
   const authNavbar = (
     <nav class="font-main flex items-center justify-between flex-wrap p-6 border-b-4">
@@ -71,13 +72,13 @@ const Navbar = ({ auth }) => {
         <div class="text-lg flex flex-row items-center mt-4 lg:mt-0">
           <Link
             to="/post"
-            class="whitespace-nowrap inline-block text-lg px-4 py-3 leading-none border-2 border-white text-white bg-blue-500 hover:bg-white hover:border-2 hover:text-blue-500 hover:border-blue-500 mr-6 rounded-md"
+            class="whitespace-nowrap inline-block text-lg px-4 py-3 leading-none border-2 border-white text-white bg-blue-500 hover:bg-white hover:border-2 hover:text-primary hover:border-primary mr-6 rounded-md"
           >
             Sell Course
           </Link>
           <Link
             to="/following"
-            class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-blue-500 mr-8 whitespace-nowrap"
+            class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-primary mr-8 whitespace-nowrap"
           >
             My Passes
           </Link>
@@ -123,13 +124,13 @@ const Navbar = ({ auth }) => {
         <div class="text-lg">
           <Link
             to="/post"
-            class="inline-block px-4 py-3 leading-none border-2 rounded border-white text-white bg-blue-500 hover:bg-white hover:text-blue-500 hover:border-blue-500 mt-4 lg:mt-0 mr-6"
+            class="inline-block px-4 py-3 leading-none border-2 rounded border-white text-white bg-blue-500 hover:bg-white hover:text-primary hover:border-primary mt-4 lg:mt-0 mr-6"
           >
             Get started
           </Link>
           <Link
             to="/login"
-            class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-blue-500 mr-6"
+            class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-primary mr-6"
           >
             Login
           </Link>
@@ -139,7 +140,16 @@ const Navbar = ({ auth }) => {
   );
 
   return (
-    <Fragment> {auth.isAuthenticated ? authNavbar : visitorNavbar} </Fragment>
+    <Fragment>
+      {' '}
+      {location.pathname == '/' ? (
+        <Fragment> </Fragment>
+      ) : auth.isAuthenticated ? (
+        authNavbar
+      ) : (
+        visitorNavbar
+      )}{' '}
+    </Fragment>
   );
 };
 

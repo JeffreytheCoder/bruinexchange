@@ -85,7 +85,7 @@ const Login = ({ login, isAuthenticated }) => {
             </button>{' '}
             <Link
               to="/register"
-              className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+              className="inline-block align-baseline font-bold text-sm text-primary hover:text-blue-800"
             >
               Register
             </Link>{' '}
