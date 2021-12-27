@@ -107,19 +107,14 @@ router.put(
     }
 
     try {
-      // Check if the page exists
+      // Check if the ticket exists
       let ticket = await Ticket.findById(req.params.ticket_id);
 
       if (!ticket) {
         return res.status(400).json({ msg: 'Ticket does not exist' });
       }
 
-      let { subject, course, lec, disc, owner, guest, complete } = req.body;
-
-      // set the owner as the current user
-      if (!owner) {
-        owner = req.user.id;
-      }
+      let { give_course, get_courses, owner, guest, complete } = req.body;
 
       // Check if user is the ticket owner
       if (owner.toString() !== req.user.id) {
@@ -128,18 +123,53 @@ router.put(
           .json({ msg: 'User is not the ticket owner, not authorized' });
       }
 
+      // check if give_course and get_courses are valid
+      if (
+        !(give_course.subject in subjectCourses) ||
+        !(give_course.course in subjectCourses[give_course.subject].courses)
+      ) {
+        return res
+          .status(400)
+          .json({ msg: 'Give_course is not a valid course' });
+      }
+
+      for (const get_course of get_courses) {
+        if (
+          !(get_course.subject in subjectCourses) ||
+          !(get_course.course in subjectCourses[get_course.subject].courses)
+        ) {
+          return res
+            .status(400)
+            .json({ msg: 'One or more of get_courses is not a valid course' });
+        }
+      }
+
+      // check if the current user already has a ticket with the same give_course
+      const user = await User.findById(req.user.id);
+
+      for (const ticketId of user.tickets) {
+        const ticket = await Ticket.findById(ticketId);
+
+        if (
+          ticket.give_course.subject == give_course.subject &&
+          ticket.give_course.course == give_course.course
+        ) {
+          return res.status(400).json({
+            msg: 'You already have a ticket with the same give_course. Try edit that ticket',
+          });
+        }
+      }
+
+      // update ticket
       const ticketFields = {
-        subject,
-        course,
-        lec,
-        disc,
+        give_course,
+        get_courses,
         owner,
         guest,
         complete,
       };
 
-      // update ticket
-      const updatedTicket = await ticket.findOneAndUpdate(
+      const updatedTicket = await Ticket.findOneAndUpdate(
         { _id: req.params.ticket_id },
         { $set: ticketFields },
         { new: true }
