@@ -7,16 +7,16 @@ const Ticket = require('../models/Ticket');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
 
+const subjectCourses = require('../public/subjectCourses.json');
+
 // @route    POST api/ticket/
 // @desc     current user create an ticket
 // @access   Private
 router.post(
   '/',
   auth,
-  check('subject', 'Subject is required').not().isEmpty(),
-  check('course', 'Course is required').not().isEmpty(),
-  check('lec', 'Lec is required').not().isEmpty(),
-  check('disc', 'Disc is required').not().isEmpty(),
+  check('give_course', 'Give_course is required').not().isEmpty(),
+  check('get_courses', 'Get_courses is required').not().isEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -24,7 +24,44 @@ router.post(
     }
 
     try {
-      let { subject, course, lec, disc, owner, guest, complete } = req.body;
+      let { give_course, get_courses, owner, guest, complete } = req.body;
+
+      // check if give_course and get_courses are valid
+      if (
+        !(give_course.subject in subjectCourses) ||
+        !(give_course.course in subjectCourses[give_course.subject].courses)
+      ) {
+        return res
+          .status(400)
+          .json({ msg: 'Give_course is not a valid course' });
+      }
+
+      for (const get_course of get_courses) {
+        if (
+          !(get_course.subject in subjectCourses) ||
+          !(get_course.course in subjectCourses[get_course.subject].courses)
+        ) {
+          return res
+            .status(400)
+            .json({ msg: 'One or more of get_courses is not a valid course' });
+        }
+      }
+
+      // check if the current user already has a ticket with the same give_course
+      const user = await User.findById(req.user.id);
+
+      for (const ticketId of user.tickets) {
+        const ticket = await Ticket.findById(ticketId);
+
+        if (
+          ticket.give_course.subject == give_course.subject &&
+          ticket.give_course.course == give_course.course
+        ) {
+          return res.status(400).json({
+            msg: 'You already have a ticket with the same give_course. Try edit that ticket',
+          });
+        }
+      }
 
       // set the owner as the current user
       if (!owner) {
@@ -33,19 +70,16 @@ router.post(
 
       // save page
       const ticket = new Ticket({
-        subject,
-        course,
-        lec,
-        disc,
+        give_course,
+        get_courses,
         owner,
         guest,
         complete,
       });
-      await Ticket.save();
+      await ticket.save();
 
       // add ticket to user's tickets
-      const user = await User.findById(req.user.id);
-      user.tickets.unshift(Ticket);
+      user.tickets.unshift(ticket);
       await user.save();
 
       res.json({ ticket });
