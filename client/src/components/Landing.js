@@ -1,76 +1,56 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import Footer from './global/Footer';
 import logo from '../images/bruin-exchange-logo.png';
 
-const Landing = () => {
+const Landing = ({ auth }) => {
   return (
     <div class="flex flex-col h-screen justify-between">
-      <header class="font-main flex flex-row items-center justify-between flex-wrap p-6">
-        <div class="lg:flex-grow flex-1"></div>
-
-        <div>
-          <Link
-            to="/post"
-            class="text-lg inline-block px-4 py-3 leading-none border-2 rounded-lg border-white text-white bg-primary hover:bg-white hover:text-primary hover:border-primary mt-4 lg:mt-0 mr-6"
-          >
-            Sell Your Course
-          </Link>
-        </div>
-        <div>
-          <Link
-            to="/login"
-            class="text-lg block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-primary mr-6"
-          >
-            Login
-          </Link>
-        </div>
-      </header>
-
-      <div class="flex justify-center items-center flex-col my-16">
-        <img
-          class="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 mb-10"
-          src={logo}
-          alt="bruinpass logo"
-        ></img>
-
-        <div class="container flex justify-center items-center px-2 sm:px-4 lg:px-4 mb-20">
-          <div class="relative w-2/3 lg:w-1/2 border-gray-400 border-2 rounded-lg p-0.5">
-            {' '}
-            <input
-              type="text"
-              class="font-main text-gray-600 h-12 w-full pr-8 pl-5 rounded z-0 border-none outline-none text-xl"
-              placeholder="Search for the course you want to take..."
-            />
-            <div class="absolute top-4 right-3">
-              {/* <i class="fa fa-search text-gray-400 z-20 hover:text-gray-500"></i>{' '} */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="-mt-1 mr-1 h-7 w-7 text-gray-500"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <Link to="/about">
-          <div class="font-main underline text-dark font-bold text-lg">
-            How does BruinPass works?
+      <nav class="font-main flex items-center justify-between flex-nowrap p-6 border-b-4">
+        <Link to="/">
+          <div class="flex items-center flex-shrink-0 mr-8">
+            <img className="h-20" src={logo} alt="bruin exchange logo"></img>
+            {/* <span class="font-bold text-xl ml-2">FansPick</span> */}
           </div>
         </Link>
-      </div>
+
+        <div class="items-center">
+          <div class="text-lg flex-1"></div>
+
+          <div class="text-lg flex flex-row items-center">
+            {auth.isAuthenticated ? (
+              <Link
+                to="/my-tickets"
+                class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-green-500 mr-6"
+              >
+                My Tickets
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-green-500 mr-8"
+              >
+                Login
+              </Link>
+            )}
+          </div>
+        </div>
+      </nav>
 
       <Footer />
     </div>
   );
 };
 
-export default Landing;
+Landing.propTypes = {
+  auth: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps)(Landing);

@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import logoWhite from '../../images/logo192.png';
+import logoWhite from '../../images/bruin-exchange-logo.png';
 
 const Navbar = ({ auth }) => {
   const [hideMenu, setMenu] = useState(true);
