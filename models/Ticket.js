@@ -2,20 +2,18 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const TicketSchema = new Schema({
-  subject: {
-    type: String,
-    required: true,
+  give_course: {
+    type: Schema.Types.ObjectId,
+    ref: 'course',
   },
-  course: {
-    type: Number,
-    required: true,
-  },
-  lec: {
-    type: Number,
-  },
-  disc: {
-    type: String,
-  },
+  get_courses: [
+    {
+      course: {
+        type: Schema.Types.ObjectId,
+        ref: 'course',
+      },
+    },
+  ],
   owner: {
     type: Schema.Types.ObjectId,
     ref: 'user',

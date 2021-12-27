@@ -13,9 +13,10 @@ const auth = require('../middleware/auth');
 router.post(
   '/',
   auth,
-  check('type', 'Type is required').not().isEmpty(),
+  check('subject', 'Subject is required').not().isEmpty(),
   check('course', 'Course is required').not().isEmpty(),
-  check('price', 'Price is required').not().isEmpty(),
+  check('lec', 'Lec is required').not().isEmpty(),
+  check('disc', 'Disc is required').not().isEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -23,45 +24,28 @@ router.post(
     }
 
     try {
-      let {
-        type,
-        course,
-        price,
-        seller,
-        buyer,
-        confirmSell,
-        paid,
-        transferDeadline,
-        expireDate,
-        payDeadline,
-      } = req.body;
+      let { subject, course, lec, disc, owner, guest, complete } = req.body;
 
-      // set buyer or seller as the current user according to the ticket type
-      if (type == 'buy' && !buyer) {
-        buyer = req.user.id;
-      }
-      if (type == 'sell' && !seller) {
-        seller = req.user.id;
+      // set the owner as the current user
+      if (!owner) {
+        owner = req.user.id;
       }
 
       // save page
-      const ticket = new ticket({
-        type,
+      const ticket = new Ticket({
+        subject,
         course,
-        price,
-        seller,
-        buyer,
-        confirmSell,
-        paid,
-        transferDeadline,
-        expireDate,
-        payDeadline,
+        lec,
+        disc,
+        owner,
+        guest,
+        complete,
       });
-      await ticket.save();
+      await Ticket.save();
 
       // add ticket to user's tickets
       const user = await User.findById(req.user.id);
-      user.tickets.unshift(ticket);
+      user.tickets.unshift(Ticket);
       await user.save();
 
       res.json({ ticket });
@@ -78,9 +62,10 @@ router.post(
 router.put(
   '/:ticket_id',
   auth,
-  check('type', 'Type is required').not().isEmpty(),
+  check('subject', 'Subject is required').not().isEmpty(),
   check('course', 'Course is required').not().isEmpty(),
-  check('price', 'Price is required').not().isEmpty(),
+  check('lec', 'Lec is required').not().isEmpty(),
+  check('disc', 'Disc is required').not().isEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -89,69 +74,44 @@ router.put(
 
     try {
       // Check if the page exists
-      let ticket = await ticket.findById(req.params.ticket_id);
+      let ticket = await Ticket.findById(req.params.ticket_id);
 
       if (!ticket) {
-        return res.status(400).json({ msg: 'ticket does not exist' });
+        return res.status(400).json({ msg: 'Ticket does not exist' });
       }
 
-      let {
-        type,
-        course,
-        price,
-        seller,
-        buyer,
-        confirmSell,
-        paid,
-        transferDeadline,
-        expireDate,
-        payDeadline,
-      } = req.body;
+      let { subject, course, lec, disc, owner, guest, complete } = req.body;
 
-      // set buyer or seller as the current user according to the ticket type
-      if (type == 'buy') {
-        buyer = req.user.id;
-      }
-      if (type == 'sell') {
-        seller = req.user.id;
+      // set the owner as the current user
+      if (!owner) {
+        owner = req.user.id;
       }
 
       // Check if user is the ticket owner
-      let user;
-
-      if (type == 'buy') {
-        user = buyer;
-      } else {
-        user = seller;
-      }
-
-      if (user && user.toString() !== req.user.id) {
+      if (owner.toString() !== req.user.id) {
         return res
           .status(401)
           .json({ msg: 'User is not the ticket owner, not authorized' });
       }
 
       const ticketFields = {
-        type,
+        subject,
         course,
-        price,
-        seller,
-        buyer,
-        confirmSell,
-        paid,
-        transferDeadline,
-        expireDate,
-        payDeadline,
+        lec,
+        disc,
+        owner,
+        guest,
+        complete,
       };
 
       // update ticket
-      const updatedticket = await ticket.findOneAndUpdate(
+      const updatedTicket = await ticket.findOneAndUpdate(
         { _id: req.params.ticket_id },
         { $set: ticketFields },
         { new: true }
       );
 
-      res.json({ updatedticket });
+      res.json({ updatedTicket });
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
@@ -165,21 +125,13 @@ router.put(
 router.delete('/:ticket_id', auth, async (req, res) => {
   try {
     // Check if the page exists
-    let ticket = await ticket.findById(req.params.page_id);
+    let ticket = await Ticket.findById(req.params.page_id);
     if (!ticket) {
       return res.status(400).json({ msg: 'ticket does not exist' });
     }
 
     // Check if user is the ticket owner
-    let userId;
-
-    if (ticket.type == 'buy') {
-      userId = ticket.buyer;
-    } else {
-      userId = ticket.seller;
-    }
-
-    if (userId.toString() !== req.user.id) {
+    if (ticket.owner.toString() !== req.user.id) {
       return res
         .status(401)
         .json({ msg: 'User is not the ticket owner, not authorized' });
@@ -206,7 +158,7 @@ router.delete('/:ticket_id', auth, async (req, res) => {
 router.get('/:ticket_id', async (req, res) => {
   try {
     // check if the page exists
-    let ticket = await ticket.findById(req.params.ticket_id);
+    let ticket = await Ticket.findById(req.params.ticket_id);
     if (!ticket) {
       return res.status(400).json({ msg: 'ticket does not exist' });
     }
@@ -218,119 +170,31 @@ router.get('/:ticket_id', async (req, res) => {
   }
 });
 
-// @route    PUT api/ticket/:ticket_id/confirmsell
-// @desc     current user (seller) confirms selling a buying ticket by others
+// @route    PUT api/ticket/:ticket_id/complete
+// @desc     current user (guest) completes a ticket
 // @access   Private
-router.put('/:ticket_id/confirmsell', auth, async (req, res) => {
+router.put('/:ticket_id/complete', auth, async (req, res) => {
   try {
     // Check if the page exists
-    let ticket = await ticket.findById(req.params.ticket_id);
+    let ticket = await Ticket.findById(req.params.ticket_id);
 
     if (!ticket) {
-      return res.status(400).json({ msg: 'ticket does not exist' });
-    }
-
-    // check if the ticket has been confirmed selling
-    if (ticket.confirmSell) {
-      return res.status(400).json({ msg: 'ticket has been confirmed sold' });
-    }
-
-    // check if is buying ticket
-    if (ticket.type != 'buy') {
-      return res.status(400).json({ msg: 'ticket is not a buying ticket' });
-    }
-
-    // check if current user is not the buyer
-    if (ticket.buyer == req.user.id) {
-      return res.status(400).json({ msg: 'You cannot buy your own ticket' });
+      return res.status(400).json({ msg: 'Ticket does not exist' });
     }
 
     const ticketFields = {
-      confirmSell: true,
-      seller: req.user.id,
+      complete: true,
+      guest: req.user.id,
     };
 
     // update ticket
-    const updatedticket = await ticket.findOneAndUpdate(
+    const updatedTicket = await ticket.findOneAndUpdate(
       { _id: req.params.ticket_id },
       { $set: ticketFields },
       { new: true }
     );
 
-    res.json({ updatedticket });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-});
-
-// @route    PUT api/ticket/:ticket_id/pay
-// @desc     current user (buyer) pays a selling ticket by others or confirmed selling buying ticket by the current user
-// @access   Private
-router.put('/:ticket_id/pay', auth, async (req, res) => {
-  try {
-    // Check if the page exists
-    let ticket = await ticket.findById(req.params.ticket_id);
-
-    if (!ticket) {
-      return res.status(400).json({ msg: 'ticket does not exist' });
-    }
-
-    // check if the ticket has been paid
-    if (ticket.paid) {
-      return res.status(400).json({ msg: 'ticket has been paid' });
-    }
-
-    // if is a selling ticket, check if the current user is not the seller
-    // update buyer and paid
-    if (ticket.type == 'sell') {
-      if (ticket.seller == req.user.id) {
-        return res
-          .status(400)
-          .json({ msg: 'You cannot buy your own selling ticket' });
-      }
-
-      const ticketFields = {
-        paid: true,
-        buyer: req.user.id,
-      };
-
-      const updatedticket = await ticket.findOneAndUpdate(
-        { _id: req.params.ticket_id },
-        { $set: ticketFields },
-        { new: true }
-      );
-
-      res.json({ updatedticket });
-    }
-
-    // if is a buying ticket, check if it is confirmed selling and the buyer is the current user
-    // update paid
-    else {
-      if (!ticket.confirmSell) {
-        return res
-          .status(400)
-          .json({ msg: 'The ticket does not have a seller yet' });
-      }
-
-      if (ticket.buyer != req.user.id) {
-        return res
-          .status(400)
-          .json({ msg: "You cannot pay for another user's buying ticket" });
-      }
-
-      const ticketFields = {
-        paid: true,
-      };
-
-      const updatedticket = await ticket.findOneAndUpdate(
-        { _id: req.params.ticket_id },
-        { $set: ticketFields },
-        { new: true }
-      );
-
-      res.json({ updatedticket });
-    }
+    res.json({ updatedTicket });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
