@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import Footer from './global/Footer';
 import logo from '../images/bruin-exchange-logo.png';
+
+import CourseForm from './global/CourseForm';
+import Footer from './global/Footer';
 
 const Landing = ({ auth }) => {
   return (
@@ -39,6 +41,8 @@ const Landing = ({ auth }) => {
           </div>
         </div>
       </nav>
+
+      <CourseForm />
 
       <Footer />
     </div>
