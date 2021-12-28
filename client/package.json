@@ -19,7 +19,8 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "uuid": "^8.3.2",
-    "web-vitals": "^2.1.2"
+    "web-vitals": "^2.1.2",
+    "react-error-overlay": "6.0.9"
   },
   "scripts": {
     "start": "craco start",
@@ -47,5 +48,8 @@
     "autoprefixer": "^9",
     "postcss": "^7",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat"
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   }
 }
