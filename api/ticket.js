@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
-const normalize = require('normalize-url');
+const _ = require('lodash');
 
 const Ticket = require('../models/Ticket');
 const User = require('../models/User');
@@ -16,7 +16,7 @@ router.post(
   '/',
   auth,
   check('give_course', 'Give_course is required').not().isEmpty(),
-  check('get_courses', 'Get_courses is required').not().isEmpty(),
+  check('get_course', 'Get_courses is required').not().isEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -24,7 +24,7 @@ router.post(
     }
 
     try {
-      let { give_course, get_courses, owner, guest, complete } = req.body;
+      let { give_course, get_course, owner, guest, complete } = req.body;
 
       // check if give_course and get_courses are valid
       if (
@@ -36,15 +36,13 @@ router.post(
           .json({ msg: 'Give_course is not a valid course' });
       }
 
-      for (const get_course of get_courses) {
-        if (
-          !(get_course.subject in subjectCourses) ||
-          !(get_course.course in subjectCourses[get_course.subject].courses)
-        ) {
-          return res
-            .status(400)
-            .json({ msg: 'One or more of get_courses is not a valid course' });
-        }
+      if (
+        !(get_course.subject in subjectCourses) ||
+        !(get_course.course in subjectCourses[get_course.subject].courses)
+      ) {
+        return res
+          .status(400)
+          .json({ msg: 'One or more of get_courses is not a valid course' });
       }
 
       // check if the current user already has a ticket with the same give_course
@@ -71,7 +69,7 @@ router.post(
       // save page
       const ticket = new Ticket({
         give_course,
-        get_courses,
+        get_course,
         owner,
         guest,
         complete,
@@ -96,10 +94,8 @@ router.post(
 router.put(
   '/:ticket_id',
   auth,
-  check('subject', 'Subject is required').not().isEmpty(),
-  check('course', 'Course is required').not().isEmpty(),
-  check('lec', 'Lec is required').not().isEmpty(),
-  check('disc', 'Disc is required').not().isEmpty(),
+  check('give_course', 'Give_course is required').not().isEmpty(),
+  check('get_course', 'Get_courses is required').not().isEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -114,7 +110,7 @@ router.put(
         return res.status(400).json({ msg: 'Ticket does not exist' });
       }
 
-      let { give_course, get_courses, owner, guest, complete } = req.body;
+      let { give_course, get_course, owner, guest, complete } = req.body;
 
       // Check if user is the ticket owner
       if (owner.toString() !== req.user.id) {
@@ -133,15 +129,13 @@ router.put(
           .json({ msg: 'Give_course is not a valid course' });
       }
 
-      for (const get_course of get_courses) {
-        if (
-          !(get_course.subject in subjectCourses) ||
-          !(get_course.course in subjectCourses[get_course.subject].courses)
-        ) {
-          return res
-            .status(400)
-            .json({ msg: 'One or more of get_courses is not a valid course' });
-        }
+      if (
+        !(get_course.subject in subjectCourses) ||
+        !(get_course.course in subjectCourses[get_course.subject].courses)
+      ) {
+        return res
+          .status(400)
+          .json({ msg: 'One or more of get_courses is not a valid course' });
       }
 
       // check if the current user already has a ticket with the same give_course
@@ -163,7 +157,7 @@ router.put(
       // update ticket
       const ticketFields = {
         give_course,
-        get_courses,
+        get_course,
         owner,
         guest,
         complete,
@@ -216,7 +210,7 @@ router.delete('/:ticket_id', auth, async (req, res) => {
   }
 });
 
-// @route    GET api/pages/:ticket_id
+// @route    GET api/ticket/:ticket_id
 // @desc     get a ticket
 // @access   Public
 router.get('/:ticket_id', async (req, res) => {
@@ -259,6 +253,89 @@ router.put('/:ticket_id/complete', auth, async (req, res) => {
     );
 
     res.json({ updatedTicket });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route    GET api/ticket/search
+// @desc     search for similar tickets based on search conditions
+// @access   Public
+router.get('/search', async (req, res) => {
+  try {
+    const { give_course, get_course } = req.body;
+
+    let getMatchGiveTickets = [];
+
+    if (give_course.lec) {
+      if (give_course.disc) {
+        getMatchGiveTickets = await Ticket.findAll({
+          give_course: {
+            subject: get_course.subject,
+            course: get_course.course,
+            lec: get_course.lec,
+            disc: get_course.disc,
+          },
+        });
+      } else {
+        getMatchGiveTickets = await Ticket.findAll({
+          give_course: {
+            subject: get_course.subject,
+            course: get_course.course,
+            lec: get_course.lec,
+          },
+        });
+      }
+    } else {
+      getMatchGiveTickets = await Ticket.findAll({
+        give_course: {
+          subject: get_course.subject,
+          course: get_course.course,
+        },
+      });
+    }
+
+    let giveMatchGetTickets = [];
+
+    await Ticket.findAll(
+      {
+        get_course: {
+          subject: give_course.subject,
+          course: give_course.course,
+        },
+      },
+      (err, ticket) => {
+        if (ticket.get_course.lec) {
+          if (ticket.get_course.disc) {
+            if (ticket.get_course.disc == give_course.disc) {
+              giveMatchGetTickets.push(ticket);
+            } else {
+              return;
+            }
+          }
+          if (ticket.get_course.lec == give_course.lec) {
+            giveMatchGetTickets.push(ticket);
+          } else {
+            return;
+          }
+        } else {
+          giveMatchGetTickets.push(ticket);
+        }
+      }
+    );
+
+    let tickets = [];
+
+    getMatchGiveTickets.forEach((getMatchGiveTicket) => {
+      giveMatchGetTickets.forEach((giveMatchGetTicket) => {
+        if (_.isEqual(getMatchGiveTicket, giveMatchGetTicket)) {
+          tickets.push(getMatchGiveTicket);
+        }
+      });
+    });
+
+    res.json({ tickets });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

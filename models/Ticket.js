@@ -20,24 +20,22 @@ const TicketSchema = new Schema({
       required: true,
     },
   },
-  get_courses: [
-    {
-      subject: {
-        type: String,
-        required: true,
-      },
-      course: {
-        type: String,
-        required: true,
-      },
-      lec: {
-        type: String,
-      },
-      disc: {
-        type: String,
-      },
+  get_course: {
+    subject: {
+      type: String,
+      required: true,
     },
-  ],
+    course: {
+      type: String,
+      required: true,
+    },
+    lec: {
+      type: String,
+    },
+    disc: {
+      type: String,
+    },
+  },
   owner: {
     type: Schema.Types.ObjectId,
     ref: 'user',
