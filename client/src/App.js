@@ -4,11 +4,12 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import PrivateRoute from './components/global/PrivateRoute';
 import Alert from './components/global/Alert';
 import Navbar from './components/global/Navbar';
+import Footer from './components/global/Footer';
+
 import Landing from './components/Landing';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
-// import Page from './components/page/Page';
-// import PostPage from './components/post/PostPage';
+import Post from './components/Post';
 // import CreatePage from './components/page/CreatePage';
 
 // redux
@@ -41,14 +42,14 @@ const App = () => {
         <Switch>
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
-          {/* <PrivateRoute exact path="/page/create" component={CreatePage} />
-          <PrivateRoute path="/page/:page_id" component={Page} />
-          <PrivateRoute path="/post/:post_id" component={PostPage} /> */}
+          <PrivateRoute exact path="/post" component={Post} />
+
           {/* <Route exact path="/create-page" component={CreatePage} /> */}
           {/* <Route exact path='/my-pages' component={MyPages} />
           <Route exact path='/following' component={Following} />
           <Route exact path='/me' component={Me} /> */}
         </Switch>
+        <Footer />
       </Router>
     </Provider>
   );
