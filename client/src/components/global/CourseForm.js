@@ -5,7 +5,6 @@ import { login } from '../../actions/auth';
 import Select from 'react-select';
 
 import subjectCourses from '../../files/subjectCourses.json';
-import e from 'express';
 
 const CourseForm = () => {
   const [formData, setFormData] = useState({
@@ -103,9 +102,6 @@ const CourseForm = () => {
             value={formData.course}
           />
         </form>{' '}
-        {/* <p className="text-center text-gray-500 text-xs">
-          & copy; 2020 Acme Corp.All rights reserved.{' '}
-        </p>{' '} */}
       </div>{' '}
     </div>
   );
