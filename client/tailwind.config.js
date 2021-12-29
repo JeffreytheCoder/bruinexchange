@@ -7,9 +7,15 @@ module.exports = {
         main: ['Nunito'],
       },
       colors: {
-        primary: '#00ADF0',
-        dark: '#4798EA',
-        darker: '#0079B8',
+        // previous-primary: '#00ADF0'
+        primary: '#00ACF0',
+        light: '#57CFFF',
+        dark: '#00638A',
+        grayer: '#787878',
+        saturate: '#00ACF0',
+        desaturate: '#18A2D8',
+        brighten: '#33DFFF',
+        background: '#00638A',
       },
     },
   },

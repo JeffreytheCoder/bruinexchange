@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 
 import Select from 'react-select';
 
-import subjectCourses from '../../files/subjectCourses.json';
+import subjectCourses from '../../assets/subjectCourses.json';
 
-const CourseForm = () => {
+const CourseForm = ({ isGive }) => {
   const lecOptions = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
   ];
@@ -102,11 +102,20 @@ const CourseForm = () => {
   };
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="flex w-2/3 flex-row flex-nowrap">
-        <form className="flex bg-white flex-row" onSubmit={onSubmit}>
+    <div className="flex justify-center flex-col items-center mt-6">
+      <div className="flex w-4/5 flex-col border-2 rounded-xl pt-6 px-6 pb-2 border-gray-300">
+        {isGive ? (
+          <text class="font-main text-2xl flex-start font-semibold mb-4">
+            Give out...
+          </text>
+        ) : (
+          <text class="font-main text-2xl flex-start font-semibold mb-4">
+            And get...
+          </text>
+        )}
+        <div class="flex flex-col md:flex-row justify-start">
           <Select
-            className="basic-single w-auto mr-6 text-lg"
+            className="basic-single w-full text-lg mr-6 mb-4"
             classNamePrefix="select"
             isSearchable={true}
             placeholder={'Select a subject...'}
@@ -119,7 +128,7 @@ const CourseForm = () => {
             }
           />
           <Select
-            className="basic-single w-auto mr-6 text-lg"
+            className="basic-single w-full text-lg mr-6 mb-4"
             classNamePrefix="select"
             defaultValue={''}
             isSearchable={true}
@@ -132,12 +141,16 @@ const CourseForm = () => {
               setFormData({ ...formData, course: selectedOption })
             }
           />
+        </div>
+        <div class="flex flex-col md:flex-row justify-start">
           <Select
-            className="basic-single w-auto mr-6 text-lg"
+            className="basic-single w-full text-lg mr-6 mb-4"
             classNamePrefix="select"
             defaultValue={''}
             isSearchable={true}
-            placeholder={'Select a lecture...'}
+            placeholder={
+              isGive ? 'Select a lecture...' : 'Select a lecture... (optional)'
+            }
             isClearable={true}
             name="lecture"
             options={lecs}
@@ -147,11 +160,15 @@ const CourseForm = () => {
             }
           />
           <Select
-            className="basic-single w-auto mr-6 text-lg"
+            className="basic-single w-full text-lg mr-6 mb-4"
             classNamePrefix="select"
             defaultValue={''}
             isSearchable={true}
-            placeholder={'Select a discussion...'}
+            placeholder={
+              isGive
+                ? 'Select a discussion...'
+                : 'Select a discussion... (optional)'
+            }
             isClearable={true}
             name="discussion"
             options={discs}
@@ -160,8 +177,8 @@ const CourseForm = () => {
               setFormData({ ...formData, disc: selectedOption })
             }
           />
-        </form>{' '}
-      </div>{' '}
+        </div>
+      </div>
     </div>
   );
 };
