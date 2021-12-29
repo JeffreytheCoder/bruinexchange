@@ -1,12 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Redirect, useHistory } from 'react-router-dom';
-import { login } from '../../actions/auth';
 
 import Select from 'react-select';
 
 import subjectCourses from '../../files/subjectCourses.json';
 
 const CourseForm = () => {
+  const lecOptions = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+  ];
+  const discOptions = [
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z',
+  ];
+
   const [formData, setFormData] = useState({
     subject: '',
     course: '',
@@ -16,6 +46,8 @@ const CourseForm = () => {
 
   const [subjects, setSubjects] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [lecs, setLecs] = useState([]);
+  const [discs, setDiscs] = useState([]);
 
   useEffect(() => {
     const subjects = [];
@@ -27,16 +59,41 @@ const CourseForm = () => {
 
   useEffect(() => {
     if (formData.subject != '') {
-      setSubjects(subjectCourses[formData.subject].courses);
+      const courseJson = subjectCourses[formData.subject.value].courses;
+      const courses = [];
+
+      Object.keys(courseJson).map((course, idx) => {
+        courses.push({
+          value: course,
+          label: course + '. ' + courseJson[course],
+        });
+      });
+      setCourses(courses);
     }
   }, [formData.subject]);
 
-  const onChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  useEffect(() => {
+    if (formData.course != '') {
+      const lecs = [];
+      lecOptions.forEach((lec) => {
+        lecs.push({ value: lec, label: lec });
+      });
+      setLecs(lecs);
+    }
+  }, [formData.course]);
+
+  useEffect(() => {
+    if (formData.lec != 0) {
+      const discs = [];
+      discOptions.forEach((disc) => {
+        discs.push({
+          value: disc,
+          label: formData.lec.value.toString() + disc,
+        });
+      });
+      setDiscs(discs);
+    }
+  }, [formData.lec]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -57,39 +114,10 @@ const CourseForm = () => {
             name="subject"
             options={subjects}
             value={formData.subject}
-            onChange={(e) =>
-              setFormData({ ...formData, subject: e.target.value })
+            onChange={(selectedOption) =>
+              setFormData({ ...formData, subject: selectedOption })
             }
           />
-          {/* <div class="flex mr-10 w-auto mb-3">
-            <select
-              class="form-select appearance-none
-      block
-      w-full
-      px-3
-      py-1.5
-      text-base
-      font-normal
-      text-gray-700
-      bg-white bg-clip-padding bg-no-repeat
-      border border-solid border-gray-300
-      rounded
-      transition
-      ease-in-out
-      m-0
-      focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-              aria-label="Default select example"
-            >
-              <option selected>Select a subject</option>
-              {Object.keys(subjectCourses).map((key, idx) => {
-                return (
-                  <option value={key} id={idx}>
-                    {key}
-                  </option>
-                );
-              })}
-            </select>
-          </div> */}
           <Select
             className="basic-single w-auto mr-6 text-lg"
             classNamePrefix="select"
@@ -97,9 +125,40 @@ const CourseForm = () => {
             isSearchable={true}
             placeholder={'Select a course...'}
             isClearable={true}
-            name="subject"
+            name="course"
             options={courses}
             value={formData.course}
+            onChange={(selectedOption) =>
+              setFormData({ ...formData, course: selectedOption })
+            }
+          />
+          <Select
+            className="basic-single w-auto mr-6 text-lg"
+            classNamePrefix="select"
+            defaultValue={''}
+            isSearchable={true}
+            placeholder={'Select a lecture...'}
+            isClearable={true}
+            name="lecture"
+            options={lecs}
+            value={formData.lec}
+            onChange={(selectedOption) =>
+              setFormData({ ...formData, lec: selectedOption })
+            }
+          />
+          <Select
+            className="basic-single w-auto mr-6 text-lg"
+            classNamePrefix="select"
+            defaultValue={''}
+            isSearchable={true}
+            placeholder={'Select a discussion...'}
+            isClearable={true}
+            name="discussion"
+            options={discs}
+            value={formData.disc}
+            onChange={(selectedOption) =>
+              setFormData({ ...formData, disc: selectedOption })
+            }
           />
         </form>{' '}
       </div>{' '}
