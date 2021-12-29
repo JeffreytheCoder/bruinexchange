@@ -12,13 +12,15 @@ const Landing = () => {
 
   return (
     <div class="flex flex-col">
-      <CourseForm isGive={true} onChange={setGiveCourse} />
-      <CourseForm isGive={false} onChange={setGetCourse} />
-      <div class="flex flex-col items-center">
-        <button class="btn-primary w-auto mt-6" onClick={() => search()}>
-          Search
-        </button>
-      </div>
+      <form onSubmit={() => search()}>
+        <CourseForm isGive={true} onChange={setGiveCourse} />
+        <CourseForm isGive={false} onChange={setGetCourse} />
+        <div class="flex flex-col items-center">
+          <button type="submit" class="btn-primary w-auto mt-6">
+            Search
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

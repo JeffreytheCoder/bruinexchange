@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 
 import Select from 'react-select';
 
@@ -58,7 +58,7 @@ const CourseForm = ({ isGive, onChange }) => {
   }, []);
 
   useEffect(() => {
-    if (formData.subject != '') {
+    if (formData.subject) {
       const courseJson = subjectCourses[formData.subject.value].courses;
       const courses = [];
 
@@ -69,16 +69,20 @@ const CourseForm = ({ isGive, onChange }) => {
         });
       });
       setCourses(courses);
+    } else {
+      setCourses([]);
     }
   }, [formData.subject]);
 
   useEffect(() => {
-    if (formData.course != '') {
+    if (formData.course) {
       const lecs = [];
       lecOptions.forEach((lec) => {
         lecs.push({ value: lec, label: lec });
       });
       setLecs(lecs);
+    } else {
+      setLecs([]);
     }
   }, [formData.course]);
 
@@ -92,6 +96,8 @@ const CourseForm = ({ isGive, onChange }) => {
         });
       });
       setDiscs(discs);
+    } else {
+      setDiscs([]);
     }
   }, [formData.lec]);
 
@@ -116,71 +122,112 @@ const CourseForm = ({ isGive, onChange }) => {
             And get...
           </text>
         )}
+        {/* <form onSubmit={() => search()}> */}
         <div class="flex flex-col md:flex-row justify-start">
-          <Select
-            className="basic-single w-full text-lg mr-6 mb-4"
-            classNamePrefix="select"
-            isSearchable={true}
-            placeholder={'Select a subject...'}
-            isClearable={true}
-            name="subject"
-            options={subjects}
-            value={formData.subject}
-            onChange={(selectedOption) =>
-              setFormData({ ...formData, subject: selectedOption })
-            }
-          />
-          <Select
-            className="basic-single w-full text-lg mr-6 mb-4"
-            classNamePrefix="select"
-            defaultValue={''}
-            isSearchable={true}
-            placeholder={'Select a course...'}
-            isClearable={true}
-            name="course"
-            options={courses}
-            value={formData.course}
-            onChange={(selectedOption) =>
-              setFormData({ ...formData, course: selectedOption })
-            }
-          />
+          <Fragment>
+            <Select
+              className="basic-single w-full text-lg mr-6 mb-4"
+              classNamePrefix="select"
+              isSearchable={true}
+              placeholder={'Select a subject...'}
+              isClearable={true}
+              name="subject"
+              options={subjects}
+              value={formData.subject}
+              onChange={(selectedOption) =>
+                setFormData({ ...formData, subject: selectedOption })
+              }
+            />
+            <input
+              class="absolute opacity-0"
+              value={formData.subject}
+              autoComplete="off"
+              required={true}
+            />
+          </Fragment>
+          <Fragment>
+            <Select
+              className="basic-single w-full text-lg mr-6 mb-4"
+              classNamePrefix="select"
+              defaultValue={''}
+              isSearchable={true}
+              placeholder={'Select a course...'}
+              isClearable={true}
+              name="course"
+              options={courses}
+              value={formData.course}
+              onChange={(selectedOption) =>
+                setFormData({ ...formData, course: selectedOption })
+              }
+            />
+            <input
+              class="absolute opacity-0"
+              value={formData.course}
+              autoComplete="off"
+              required={true}
+            />
+          </Fragment>
         </div>
+
         <div class="flex flex-col md:flex-row justify-start">
-          <Select
-            className="basic-single w-full text-lg mr-6 mb-4"
-            classNamePrefix="select"
-            defaultValue={''}
-            isSearchable={true}
-            placeholder={
-              isGive ? 'Select a lecture...' : 'Select a lecture... (optional)'
-            }
-            isClearable={true}
-            name="lecture"
-            options={lecs}
-            value={formData.lec}
-            onChange={(selectedOption) =>
-              setFormData({ ...formData, lec: selectedOption })
-            }
-          />
-          <Select
-            className="basic-single w-full text-lg mr-6 mb-4"
-            classNamePrefix="select"
-            defaultValue={''}
-            isSearchable={true}
-            placeholder={
-              isGive
-                ? 'Select a discussion...'
-                : 'Select a discussion... (optional)'
-            }
-            isClearable={true}
-            name="discussion"
-            options={discs}
-            value={formData.disc}
-            onChange={(selectedOption) =>
-              setFormData({ ...formData, disc: selectedOption })
-            }
-          />
+          <Fragment>
+            <Select
+              className="basic-single w-full text-lg mr-6 mb-4"
+              classNamePrefix="select"
+              defaultValue={''}
+              isSearchable={true}
+              placeholder={
+                isGive
+                  ? 'Select a lecture...'
+                  : 'Select a lecture... (optional)'
+              }
+              isClearable={true}
+              name="lecture"
+              options={lecs}
+              value={formData.lec}
+              onChange={(selectedOption) =>
+                setFormData({ ...formData, lec: selectedOption })
+              }
+            />
+            {isGive && (
+              <input
+                class="absolute opacity-0"
+                value={formData.lec}
+                autoComplete="off"
+                required={true}
+              />
+            )}
+          </Fragment>
+          <Fragment>
+            <Select
+              className="basic-single w-full text-lg mr-6 mb-4"
+              classNamePrefix="select"
+              defaultValue={''}
+              isSearchable={true}
+              placeholder={
+                isGive
+                  ? 'Select a discussion...'
+                  : 'Select a discussion... (optional)'
+              }
+              isClearable={true}
+              name="discussion"
+              options={discs}
+              value={formData.disc}
+              onChange={(selectedOption) =>
+                setFormData({ ...formData, disc: selectedOption })
+              }
+            />
+            {isGive && (
+              <input
+                class="absolute opacity-0"
+                value={formData.disc}
+                autoComplete="off"
+                required={true}
+              />
+            )}
+          </Fragment>
         </div>
+        {/* </form> */}
       </div>
     </div>
   );
