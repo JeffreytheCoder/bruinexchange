@@ -4,7 +4,7 @@ import Select from 'react-select';
 
 import subjectCourses from '../../assets/subjectCourses.json';
 
-const CourseForm = ({ isGive }) => {
+const CourseForm = ({ isGive, onChange }) => {
   const lecOptions = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
   ];
@@ -95,11 +95,14 @@ const CourseForm = ({ isGive }) => {
     }
   }, [formData.lec]);
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-
-    console.log(formData);
-  };
+  useEffect(() => {
+    onChange({
+      subject: formData.subject?.value,
+      course: formData.course?.value,
+      lec: formData.lec?.value,
+      disc: formData.disc?.value,
+    });
+  }, [formData]);
 
   return (
     <div className="flex justify-center flex-col items-center mt-6">

@@ -8,12 +8,22 @@ import CourseForm from './global/CourseForm';
 import Footer from './global/Footer';
 
 const Landing = ({ auth }) => {
+  const [give, setGive] = useState({});
+  const [get, setGet] = useState({});
+
+  const search = () => {
+    console.log('search!');
+  };
+
   return (
     <div class="flex flex-col h-screen justify-between">
-      <CourseForm isGive={true} />
-      <CourseForm isGive={false} />
+      <CourseForm isGive={true} onChange={setGive} />
+      <CourseForm isGive={false} onChange={setGet} />
       <div class="flex flex-col items-center">
-        <button class="btn-primary w-auto mt-6"> Search</button>
+        <button class="btn-primary w-auto mt-6" onClick={() => search()}>
+          {' '}
+          Search
+        </button>
       </div>
 
       <Footer />
