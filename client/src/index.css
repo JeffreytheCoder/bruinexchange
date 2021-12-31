@@ -14,7 +14,7 @@
   }
 
   .btn-secondary {
-    @apply text-lg border-2 font-bold py-2 px-4 rounded ml-4 text-primary border-primary hover:text-white hover:bg-white;
+    @apply text-lg border-2 font-bold py-2 px-4 rounded ml-4 text-primary border-primary hover:border-white;
     /* color: var(--saturated-color);
     border-color: var(--saturated-color); */
   }

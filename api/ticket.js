@@ -276,6 +276,7 @@ router.get('/search', async (req, res) => {
             course: get_course.course,
             lec: get_course.lec,
             disc: get_course.disc,
+            complete: false,
           },
         });
       } else {
@@ -284,6 +285,7 @@ router.get('/search', async (req, res) => {
             subject: get_course.subject,
             course: get_course.course,
             lec: get_course.lec,
+            complete: false,
           },
         });
       }
@@ -292,6 +294,7 @@ router.get('/search', async (req, res) => {
         give_course: {
           subject: get_course.subject,
           course: get_course.course,
+          complete: false,
         },
       });
     }
@@ -303,6 +306,7 @@ router.get('/search', async (req, res) => {
         get_course: {
           subject: give_course.subject,
           course: give_course.course,
+          complete: false,
         },
       },
       (err, ticket) => {

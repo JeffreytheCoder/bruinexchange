@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import CourseForm from './global/CourseForm';
+import Ticket from './global/Ticket';
 
 const Landing = () => {
   const [giveCourse, setGiveCourse] = useState({});
@@ -8,6 +9,21 @@ const Landing = () => {
 
   const search = () => {
     console.log('search');
+  };
+
+  const ticket = {
+    ticketId: '123',
+    getCourse: {
+      subject: 'COM SCI',
+      course: '32',
+    },
+    giveCourse: {
+      subject: 'COM SCI',
+      course: '33',
+      lec: '2',
+      disc: 'C',
+    },
+    owner: 'Jeffrey',
   };
 
   return (
@@ -18,6 +34,9 @@ const Landing = () => {
         <button class="btn-primary w-auto mt-6" onClick={() => search()}>
           Search
         </button>
+      </div>
+      <div>
+        <Ticket ticket={ticket}></Ticket>
       </div>
     </div>
   );
