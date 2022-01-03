@@ -115,11 +115,11 @@ const CourseForm = ({ isGive, onChange }) => {
       <div className="flex w-4/5 flex-col border-2 rounded-xl pt-6 px-6 pb-2 border-gray-300">
         {isGive ? (
           <text class="font-main text-2xl flex-start font-semibold mb-4">
-            Give out...
+            Give out this course...
           </text>
         ) : (
           <text class="font-main text-2xl flex-start font-semibold mb-4">
-            And get...
+            And get this course!
           </text>
         )}
         {/* <form onSubmit={() => search()}> */}

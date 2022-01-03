@@ -3,9 +3,9 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
-      fontFamily: {
-        main: ['Nunito'],
-      },
+      // fontFamily: {
+      //   main: ['Nunito'],
+      // },
       colors: {
         // previous-primary: '#00ADF0'
         primary: '#00ACF0',
