@@ -220,18 +220,17 @@ router.get('/', auth, async (req, res) => {
 router.get('/tickets/:type', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
-    console.log(user.tickets);
     let tickets = [];
 
     if (req.params.type == 'all') {
       for (const cur of user.tickets) {
-        const ticket = await ticket.findById(cur._id);
+        const ticket = await Ticket.findById(cur._id);
         tickets.push(ticket);
       }
       res.json({ tickets });
     } else if (req.params.type == 'buy') {
       for (const cur of user.tickets) {
-        const ticket = await ticket.findById(cur._id);
+        const ticket = await Ticket.findById(cur._id);
 
         if (ticket.type == 'buy') {
           tickets.push(ticket);
@@ -240,7 +239,7 @@ router.get('/tickets/:type', auth, async (req, res) => {
       res.json({ tickets });
     } else if (req.params.type == 'sell') {
       for (const cur of user.tickets) {
-        const ticket = await ticket.findById(cur._id);
+        const ticket = await Ticket.findById(cur._id);
 
         if (ticket.type == 'sell') {
           tickets.push(ticket);
@@ -249,7 +248,7 @@ router.get('/tickets/:type', auth, async (req, res) => {
       res.json({ tickets });
     } else if (req.params.type == 'complete') {
       for (const cur of user.tickets) {
-        const ticket = await ticket.findById(cur._id);
+        const ticket = await Ticket.findById(cur._id);
 
         if (ticket.paid) {
           tickets.push(ticket);
@@ -258,7 +257,7 @@ router.get('/tickets/:type', auth, async (req, res) => {
       res.json({ tickets });
     } else if (req.params.type == 'pending') {
       for (const cur of user.tickets) {
-        const ticket = await ticket.findById(cur._id);
+        const ticket = await Ticket.findById(cur._id);
 
         if (!ticket.paid) {
           tickets.push(ticket);
@@ -267,7 +266,7 @@ router.get('/tickets/:type', auth, async (req, res) => {
       res.json({ tickets });
     } else if (req.params.type == 'need_action') {
       for (const cur of user.tickets) {
-        const ticket = await ticket.findById(cur._id);
+        const ticket = await Ticket.findById(cur._id);
 
         if (ticket.confirmSell && !ticket.paid) {
           tickets.push(ticket);

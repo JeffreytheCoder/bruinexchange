@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
-const Ticket = ({ ticket }) => {
-  const { _id, give_course, get_course, owner } = ticket;
+const Ticket = ({ ticket, showStatus }) => {
+  const { _id, give_course, get_course, owner, complete } = ticket;
   // useEffect(() => {
   // 	console.log(ticket)
   // }, [ticket])
@@ -57,9 +57,17 @@ const Ticket = ({ ticket }) => {
             </text>
           </div>
 
-          <div class="flex flex-col">
-            <button class="btn-secondary mb-6 md:mb-4"> Exchange </button>
-          </div>
+          {showStatus ? (
+            <div class="flex flex-col">
+              <button class="btn-secondary mb-6 md:mb-4"> Exchange </button>
+            </div>
+          ) : (
+            <div class="flex flex-col">
+              <text class="text-2xl font-semibold text-primary mb-6 md:mb-4">
+                {complete ? 'Completed' : 'Pending'}
+              </text>
+            </div>
+          )}
         </div>
       </div>
     </div>

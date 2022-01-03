@@ -24,21 +24,21 @@ const Navbar = ({ auth }) => {
         <div class="text-xl flex flex-row items-center">
           <Link
             to="/post"
-            class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-green-500 mr-8"
+            class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-primary-500 mr-8"
           >
             Post a Ticket
           </Link>
           {auth.isAuthenticated ? (
             <Link
               to="/my-tickets"
-              class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-green-500 mr-6"
+              class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-primary-500 mr-6"
             >
               My Tickets
             </Link>
           ) : (
             <Link
               to="/login"
-              class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-green-500 mr-8"
+              class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-primary-500 mr-8"
             >
               Login
             </Link>

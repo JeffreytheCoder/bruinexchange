@@ -10,6 +10,7 @@ import Landing from './components/Landing';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import Post from './components/Post';
+import MyTickets from './components/MyTickets';
 // import CreatePage from './components/page/CreatePage';
 
 // redux
@@ -43,6 +44,7 @@ const App = () => {
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
           <PrivateRoute exact path="/post" component={Post} />
+          <PrivateRoute exact path="/my-tickets" component={MyTickets} />
 
           {/* <Route exact path="/create-page" component={CreatePage} /> */}
           {/* <Route exact path='/my-pages' component={MyPages} />
