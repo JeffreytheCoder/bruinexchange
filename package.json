@@ -7,7 +7,7 @@
     "start": "node server",
     "server": "nodemon server --delay 500ms app.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"nodemon app.js\" \"npm run client\"",
+    "dev": "concurrently \"nodemon --delay 500ms app.js\" \"npm run client\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
     "start-dev": "nodemon app.js"
   },

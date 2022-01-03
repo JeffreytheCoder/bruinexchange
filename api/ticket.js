@@ -210,10 +210,10 @@ router.delete('/:ticket_id', auth, async (req, res) => {
   }
 });
 
-// @route    GET api/ticket/:ticket_id
+// @route    GET api/ticket/get/:ticket_id
 // @desc     get a ticket
 // @access   Public
-router.get('/:ticket_id', async (req, res) => {
+router.get('get/:ticket_id', async (req, res) => {
   try {
     // check if the page exists
     let ticket = await Ticket.findById(req.params.ticket_id);
@@ -270,70 +270,68 @@ router.get('/search', async (req, res) => {
 
     if (give_course.lec) {
       if (give_course.disc) {
-        getMatchGiveTickets = await Ticket.findAll({
-          give_course: {
-            subject: get_course.subject,
-            course: get_course.course,
-            lec: get_course.lec,
-            disc: get_course.disc,
-            complete: false,
-          },
+        getMatchGiveTickets = await Ticket.find({
+          'give_course.subject': get_course.subject,
+          'give_course.course': get_course.course,
+          'give_course.lec': get_course.lec,
+          'give_course.disc': get_course.disc,
+          complete: false,
         });
       } else {
-        getMatchGiveTickets = await Ticket.findAll({
-          give_course: {
-            subject: get_course.subject,
-            course: get_course.course,
-            lec: get_course.lec,
-            complete: false,
-          },
+        getMatchGiveTickets = await Ticket.find({
+          'give_course.subject': get_course.subject,
+          'give_course.course': get_course.course,
+          'give_course.lec': get_course.lec,
+          complete: false,
         });
       }
     } else {
-      getMatchGiveTickets = await Ticket.findAll({
-        give_course: {
-          subject: get_course.subject,
-          course: get_course.course,
-          complete: false,
-        },
+      getMatchGiveTickets = await Ticket.find({
+        'give_course.subject': get_course.subject,
+        'give_course.course': get_course.course,
+        complete: false,
       });
     }
 
     let giveMatchGetTickets = [];
 
-    await Ticket.findAll(
+    await Ticket.find(
       {
-        get_course: {
-          subject: give_course.subject,
-          course: give_course.course,
-          complete: false,
-        },
+        'get_course.subject': give_course.subject,
+        'get_course.course': give_course.course,
+        complete: false,
       },
-      (err, ticket) => {
-        if (ticket.get_course.lec) {
-          if (ticket.get_course.disc) {
-            if (ticket.get_course.disc == give_course.disc) {
+      (err, tickets) => {
+        for (let ticket of tickets) {
+          if (ticket.get_course.lec) {
+            if (ticket.get_course.disc) {
+              if (ticket.get_course.disc == give_course.disc) {
+                giveMatchGetTickets.push(ticket);
+              } else {
+                return;
+              }
+            }
+            if (ticket.get_course.lec == give_course.lec) {
               giveMatchGetTickets.push(ticket);
             } else {
               return;
             }
-          }
-          if (ticket.get_course.lec == give_course.lec) {
-            giveMatchGetTickets.push(ticket);
           } else {
-            return;
+            giveMatchGetTickets.push(ticket);
           }
-        } else {
-          giveMatchGetTickets.push(ticket);
         }
       }
     );
+
+    console.log(getMatchGiveTickets, giveMatchGetTickets);
 
     let tickets = [];
 
     getMatchGiveTickets.forEach((getMatchGiveTicket) => {
       giveMatchGetTickets.forEach((giveMatchGetTicket) => {
-        if (_.isEqual(getMatchGiveTicket, giveMatchGetTicket)) {
+        if (
+          getMatchGiveTicket._id.toString() == giveMatchGetTicket._id.toString()
+        ) {
           tickets.push(getMatchGiveTicket);
         }
       });
