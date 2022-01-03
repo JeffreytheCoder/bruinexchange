@@ -259,12 +259,13 @@ router.put('/:ticket_id/complete', auth, async (req, res) => {
   }
 });
 
-// @route    GET api/ticket/search
+// @route    POST api/ticket/search
 // @desc     search for similar tickets based on search conditions
 // @access   Public
-router.get('/search', async (req, res) => {
+router.post('/search', async (req, res) => {
   try {
     const { give_course, get_course } = req.body;
+    console.log(give_course, get_course);
 
     let getMatchGiveTickets = [];
 

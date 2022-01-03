@@ -1,31 +1,34 @@
 import React, { useEffect } from 'react';
 
 const Ticket = ({ ticket }) => {
-  const { ticketId, giveCourse, getCourse, owner } = ticket;
+  const { _id, give_course, get_course, owner } = ticket;
   // useEffect(() => {
   // 	console.log(ticket)
   // }, [ticket])
 
   return (
     <div className="flex justify-center flex-col items-center mt-6">
-      <div className="flex w-3/4 lg:w-1/2 flex-col border-2 rounded-xl pt-6 px-6 pb-2 border-gray-300">
-        <div class="flex flex-row justify-between items-center">
-          <div class="flex flex-col">
-            <text class="font-main text-2xl flex-start font-semibold mb-2">
-              {giveCourse.subject + ' ' + giveCourse.course}
+      <div className="flex w-4/5 flex-col border-2 rounded-xl pt-6 px-6 pb-2 border-gray-300">
+        <div class="flex flex-col md:flex-row justify-around items-center">
+          <div class="flex flex-col items-center md:items-start">
+            <text class="font-main text-xl flex-start font-semibold mb-3">
+              Some bruin gives out:
             </text>
-            <text class="font-main text-lg flex-start mb-4">
-              {(giveCourse.lec ? 'lec ' + giveCourse.lec : 'Any lec') +
+            <text class="font-main text-2xl flex-start font-semibold mb-1">
+              {give_course.subject + ' ' + give_course.course}
+            </text>
+            <text class="font-main text-lg flex-start mb-6">
+              {(give_course.lec ? 'lec ' + give_course.lec : 'Any lec') +
                 ', ' +
-                (giveCourse.disc
-                  ? 'disc ' + giveCourse.lec + giveCourse.disc
+                (give_course.disc
+                  ? 'disc ' + give_course.lec + give_course.disc
                   : 'Any disc')}
             </text>
           </div>
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-7 w-7 -mt-3"
+            className="h-7 w-7 mb-6 md:my-6"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -38,21 +41,24 @@ const Ticket = ({ ticket }) => {
             />
           </svg>
 
-          <div class="flex flex-col">
-            <text class="font-main text-2xl flex-start font-semibold mb-2">
-              {getCourse.subject + ' ' + getCourse.course}
+          <div class="flex flex-col items-center md:items-start">
+            <text class="font-main text-xl flex-start font-semibold mb-3">
+              You receive:
             </text>
-            <text class="font-main text-lg flex-start mb-4">
-              {(getCourse.lec ? 'lec ' + getCourse.lec : 'Any lec') +
+            <text class="font-main text-2xl flex-start font-semibold mb-1">
+              {get_course.subject + ' ' + get_course.course}
+            </text>
+            <text class="font-main text-lg flex-start mb-6">
+              {(get_course.lec ? 'lec ' + get_course.lec : 'Any lec') +
                 ', ' +
-                (getCourse.disc
-                  ? 'disc ' + getCourse.course + getCourse.disc
+                (get_course.disc
+                  ? 'disc ' + get_course.course + get_course.disc
                   : 'Any disc')}
             </text>
           </div>
 
           <div class="flex flex-col">
-            <button class="btn-secondary mb-4"> Exchange </button>
+            <button class="btn-secondary mb-6 md:mb-4"> Exchange </button>
           </div>
         </div>
       </div>
