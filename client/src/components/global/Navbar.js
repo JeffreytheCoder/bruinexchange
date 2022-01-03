@@ -24,7 +24,7 @@ const Navbar = ({ auth }) => {
         <div class="text-xl flex flex-row items-center">
           <Link
             to="/post"
-            class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-primary-500 mr-8"
+            class="block ml-6 mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-primary-500 mr-8"
           >
             Post a Ticket
           </Link>

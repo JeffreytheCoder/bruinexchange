@@ -17,7 +17,7 @@ const MyTickets = () => {
     <div class="flex flex-col">
       <div>
         {tickets.map((ticket) => {
-          return <Ticket ticket={ticket}></Ticket>;
+          return <Ticket ticket={ticket} showStatus={false}></Ticket>;
         })}
       </div>
     </div>

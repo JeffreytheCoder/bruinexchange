@@ -30,7 +30,7 @@ const Landing = () => {
       <CourseForm isGive={false} onChange={setGetCourse} />
       <div class="flex flex-col items-center">
         <button
-          class="flex btn-primary w-auto my-8 flex-row text-xl items-center"
+          class="flex btn-primary w-auto mt-8 flex-row text-xl items-center"
           onClick={() => search()}
         >
           Search
@@ -50,9 +50,9 @@ const Landing = () => {
           </svg>
         </button>
       </div>
-      <div>
+      <div class="mt-8">
         {tickets.map((ticket) => {
-          return <Ticket ticket={ticket}></Ticket>;
+          return <Ticket ticket={ticket} showStatus={false}></Ticket>;
         })}
       </div>
     </div>

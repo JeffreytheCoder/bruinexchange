@@ -246,13 +246,15 @@ router.put('/:ticket_id/complete', auth, async (req, res) => {
     };
 
     // update ticket
-    const updatedTicket = await ticket.findOneAndUpdate(
+    const updatedTicket = await Ticket.findOneAndUpdate(
       { _id: req.params.ticket_id },
       { $set: ticketFields },
       { new: true }
     );
 
-    res.json({ updatedTicket });
+    const owner = await User.findById(updatedTicket.owner);
+
+    res.json({ owner });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
