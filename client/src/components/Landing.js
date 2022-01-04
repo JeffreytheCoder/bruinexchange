@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import CourseForm from './global/CourseForm';
 import Ticket from './global/Ticket';
@@ -10,6 +11,8 @@ import { setAlert } from '../actions/alert';
 const Landing = () => {
   const [giveCourse, setGiveCourse] = useState({});
   const [getCourse, setGetCourse] = useState({});
+
+  const [searched, setSearched] = useState(false);
   const [tickets, setTickets] = useState([]);
 
   const search = async (e) => {
@@ -24,8 +27,8 @@ const Landing = () => {
     });
 
     const res = await axios.post('/api/ticket/search', body, config);
-    console.log(res);
 
+    setSearched(true);
     setTickets(res.data.tickets);
   };
 
@@ -57,10 +60,34 @@ const Landing = () => {
           </button>
         </div>
       </form>
-      <div class="mt-8">
+      <div class="mt-8 flex flex-col items-center">
+        {searched ? (
+          <div class="flex w-4/5 mb-4 ml-6">
+            <text class="text-xl">
+              {tickets.length > 0
+                ? tickets.length + ' results found'
+                : 'No result found'}{' '}
+            </text>
+          </div>
+        ) : (
+          <div></div>
+        )}
         {tickets.map((ticket) => {
           return <Ticket ticket={ticket} showStatus={false}></Ticket>;
         })}
+        {searched ? (
+          <div class="flex mx-10 sm:mx-0 mt-2 self-center">
+            <text class="font-medium text-lg">
+              Can't find the course you want? Try{' '}
+              <Link class="text-primary" to="/post">
+                post a ticket{' '}
+              </Link>
+              or search other courses
+            </text>
+          </div>
+        ) : (
+          <div></div>
+        )}
       </div>
     </div>
   );
