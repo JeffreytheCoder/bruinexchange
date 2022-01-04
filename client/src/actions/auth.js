@@ -55,6 +55,11 @@ export const register =
         errors.forEach((error) => {
           dispatch(setAlert(error.msg, 'danger'));
         });
+      } else {
+        const msg = err.response.data.msg;
+        if (msg) {
+          dispatch(setAlert(msg, 'danger'));
+        }
       }
 
       dispatch({
@@ -87,6 +92,11 @@ export const login =
         errors.forEach((error) => {
           dispatch(setAlert(error.msg, 'danger'));
         });
+      } else {
+        const msg = err.response.data.msg;
+        if (msg) {
+          dispatch(setAlert(msg, 'danger'));
+        }
       }
 
       dispatch({
@@ -95,7 +105,7 @@ export const login =
     }
   };
 
-export const logout = async (dispatch) => {
+export const logout = () => async (dispatch) => {
   dispatch({
     type: LOGOUT,
   });

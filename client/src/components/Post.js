@@ -23,13 +23,15 @@ const Post = () => {
 
   return (
     <div class="flex flex-col">
-      <CourseForm isGive={true} onChange={setGiveCourse} />
-      <CourseForm isGive={false} onChange={setGetCourse} />
-      <div class="flex flex-col items-center">
-        <button class="btn-primary w-auto mt-6" onClick={() => post()}>
-          Post
-        </button>
-      </div>
+      <form onSubmit={() => post()}>
+        <CourseForm isGive={true} onChange={setGiveCourse} />
+        <CourseForm isGive={false} onChange={setGetCourse} />
+        <div class="flex flex-col items-center">
+          <button class="btn-primary w-auto mt-6" type='submit'>
+            Post Ticket
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
