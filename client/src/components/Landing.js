@@ -12,7 +12,9 @@ const Landing = () => {
   const [getCourse, setGetCourse] = useState({});
   const [tickets, setTickets] = useState([]);
 
-  const search = async () => {
+  const search = async (e) => {
+    e.preventDefault();
+
     const config = {
       headers: { 'Content-Type': 'application/json' },
     };
@@ -29,7 +31,7 @@ const Landing = () => {
 
   return (
     <div class="flex flex-col">
-      <form onSubmit={() => search()}>
+      <form onSubmit={(e) => search(e)}>
         <CourseForm isGive={true} onChange={setGiveCourse} />
         <CourseForm isGive={false} onChange={setGetCourse} />
         <div class="flex flex-col items-center">

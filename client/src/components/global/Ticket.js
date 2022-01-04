@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
-const Ticket = ({ ticket, showStatus }) => {
-  const { _id, give_course, get_course, owner, complete } = ticket;
+const Ticket = ({ ticket, showStatus, isOwner }) => {
+  const { _id, give_course, get_course, complete } = ticket;
 
   const [showConfirm, setShowConfirm] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [contact, setContact] = useState({});
+  const [jump, setJump] = useState(false);
 
   const exchange = async () => {
     const res = await axios.put('/api/ticket/' + _id + '/complete');
@@ -23,13 +24,17 @@ const Ticket = ({ ticket, showStatus }) => {
     setShowContact(false);
   };
 
+  if (jump) {
+    return <Redirect to="/my-tickets" />;
+  }
+
   return (
     <div className="flex justify-center flex-col items-center mt-6">
       <div className="flex w-4/5 flex-col shadow-md rounded-xl pt-6 px-6 pb-2 ">
         <div class="flex flex-col md:flex-row justify-around items-center">
           <div class="flex flex-col items-center md:items-start">
-            <text class="font-main text-xl flex-start font-semibold mb-3">
-              A bruin gives out:
+            <text class="font-main text-xl flex-start font-medium mb-3">
+              {isOwner ? 'You give out:' : 'A bruin gives out:'}
             </text>
             <text class="font-main text-2xl flex-start font-semibold mb-1">
               {give_course.subject + ' ' + give_course.course}
@@ -59,8 +64,8 @@ const Ticket = ({ ticket, showStatus }) => {
           </svg>
 
           <div class="flex flex-col items-center md:items-start">
-            <text class="font-main text-xl flex-start font-semibold mb-3">
-              You receive:
+            <text class="font-main text-xl flex-start font-medium mb-3">
+              {isOwner ? 'A bruin receives:' : 'You receive:'}
             </text>
             <text class="font-main text-2xl flex-start font-semibold mb-1">
               {get_course.subject + ' ' + get_course.course}
@@ -76,7 +81,7 @@ const Ticket = ({ ticket, showStatus }) => {
 
           {showStatus ? (
             <div class="flex flex-col">
-              <text class="text-2xl font-semibold text-primary mb-6 md:mb-4">
+              <text class="text-2xl font-medium text-primary mb-6 md:mb-4">
                 {complete ? 'Completed' : 'Pending'}
               </text>
             </div>
@@ -181,7 +186,7 @@ const Ticket = ({ ticket, showStatus }) => {
                       <button
                         className="bg-primary text-white active:bg-primary font-bold uppercase text-sm px-3 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
-                        onClick={() => finish()}
+                        onClick={() => setJump(true)}
                       >
                         Got it!
                       </button>

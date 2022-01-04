@@ -23,11 +23,12 @@ const Post = () => {
 
   return (
     <div class="flex flex-col">
+      <h3 className="text-3xl font-semibold self-center">Post a Ticket</h3>
       <form onSubmit={() => post()}>
         <CourseForm isGive={true} onChange={setGiveCourse} />
         <CourseForm isGive={false} onChange={setGetCourse} />
         <div class="flex flex-col items-center">
-          <button class="btn-primary w-auto mt-6" type='submit'>
+          <button class="btn-primary w-auto mt-12" type="submit">
             Post Ticket
           </button>
         </div>

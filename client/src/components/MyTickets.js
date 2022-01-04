@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Ticket from './global/Ticket';
 import { logout } from '../actions/auth';
 
-const MyTickets = ({ logout }) => {
+const MyTickets = ({ user, logout }) => {
   const [tickets, setTickets] = useState([]);
 
   useEffect(async () => {
@@ -22,8 +22,8 @@ const MyTickets = ({ logout }) => {
 
   return (
     <div class="flex flex-col">
-      <div class="flex flex-row justify-between">
-        <text class="text-xl">
+      <div class="flex flex-row justify-between w-4/5 self-center items-center mb-4">
+        <text class="text-xl font-medium">
           You have {tickets.length}{' '}
           {tickets.length > 1 ? ' tickets' : ' ticket'}
         </text>
@@ -33,7 +33,14 @@ const MyTickets = ({ logout }) => {
       </div>
       <div>
         {tickets.map((ticket) => {
-          return <Ticket ticket={ticket} showStatus={true}></Ticket>;
+          const isOwner = user._id == ticket.owner;
+          return (
+            <Ticket
+              ticket={ticket}
+              showStatus={true}
+              isOwner={isOwner}
+            ></Ticket>
+          );
         })}
       </div>
     </div>
@@ -41,11 +48,12 @@ const MyTickets = ({ logout }) => {
 };
 
 MyTickets.propTypes = {
+  user: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps, { logout })(MyTickets);

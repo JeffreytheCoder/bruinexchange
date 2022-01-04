@@ -252,6 +252,12 @@ router.put('/:ticket_id/complete', auth, async (req, res) => {
       { new: true }
     );
 
+    // add ticket to guest's tickets
+    const guest = await User.findById(req.user.id);
+    guest.tickets.unshift(updatedTicket);
+    await guest.save();
+
+    // return owner info
     const owner = await User.findById(updatedTicket.owner);
 
     res.json({ owner });
@@ -267,12 +273,11 @@ router.put('/:ticket_id/complete', auth, async (req, res) => {
 router.post('/search', async (req, res) => {
   try {
     const { give_course, get_course } = req.body;
-    console.log(give_course, get_course);
 
     let getMatchGiveTickets = [];
 
-    if (give_course.lec) {
-      if (give_course.disc) {
+    if (get_course.lec) {
+      if (get_course.disc) {
         getMatchGiveTickets = await Ticket.find({
           'give_course.subject': get_course.subject,
           'give_course.course': get_course.course,
