@@ -25,7 +25,7 @@ const Ticket = ({ ticket, showStatus }) => {
 
   return (
     <div className="flex justify-center flex-col items-center mt-6">
-      <div className="flex w-4/5 flex-col border-2 rounded-xl pt-6 px-6 pb-2 border-gray-300">
+      <div className="flex w-4/5 flex-col shadow-md rounded-xl pt-6 px-6 pb-2 ">
         <div class="flex flex-col md:flex-row justify-around items-center">
           <div class="flex flex-col items-center md:items-start">
             <text class="font-main text-xl flex-start font-semibold mb-3">

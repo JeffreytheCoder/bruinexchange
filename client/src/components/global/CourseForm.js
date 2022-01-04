@@ -112,13 +112,13 @@ const CourseForm = ({ isGive, onChange }) => {
 
   return (
     <div className="flex justify-center flex-col items-center mt-6">
-      <div className="flex w-4/5 flex-col border-2 rounded-xl pt-6 px-6 pb-2 border-gray-300">
+      <div className="flex w-4/5 flex-col shadow-md rounded-xl pt-6 px-6 pb-2 border-gray-300">
         {isGive ? (
-          <text class="font-main text-2xl flex-start font-semibold mb-4">
+          <text class="font-medium text-xl sm:text-2xl text-gray-800 mb-4">
             Give out this course...
           </text>
         ) : (
-          <text class="font-main text-2xl flex-start font-semibold mb-4">
+          <text class="font-medium text-xl sm:text-2xl text-gray-800 mb-4">
             And get this course!
           </text>
         )}
